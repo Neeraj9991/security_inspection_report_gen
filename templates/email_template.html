@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        font-family: "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+        line-height: 1.6;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        border-radius: 8px;
+
+        padding: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        border-bottom: 2px solid #0e2a47;
+        text-align: center;
+        padding-bottom: 16px;
+      }
+      .company-logo {
+        height: 60px;
+        object-fit: contain;
+        margin-bottom: 16px;
+      }
+      .header h1 {
+        font-size: 28px;
+        margin: 0;
+        color: #0e2a47;
+      }
+      .header p {
+        font-size: 14px;
+        color: #333;
+        margin: 8px 0 0;
+      }
+      .site-card {
+        margin-bottom: 40px;
+        border: 1px solid #e0e0e0;
+        padding: 20px;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      }
+      .site-header {
+        font-size: 1.2em;
+        color: #212529;
+        margin-bottom: 15px;
+        font-weight: 500;
+      }
+      .site-meta {
+        color: #666;
+        font-size: 0.9em;
+        margin-top: 10px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 20px 0;
+      }
+      th {
+        background-color: #0e1949;
+        color: white;
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .rating {
+        font-weight: bold;
+        text-transform: capitalize;
+      }
+      .recommendations {
+        padding: 15px;
+        border-left: 4px solid #d52d27;
+        border-radius: 0 8px 8px 0;
+        margin-top: 15px;
+      }
+      .image-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 15px;
+      }
+      .image-gallery img {
+        max-width: 200px;
+        max-height: 150px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+      }
+      .footer {
+        margin-top: 40px;
+        padding: 24px;
+        color: #333;
+        width: 100%;
+      }
+      .footer-content {
+        display: flex;
+        justify-content: flex-start;
+      }
+      .footer-info {
+        text-align: left;
+        max-width: 400px;
+      }
+      .signature {
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 4px;
+        color: #0e1949;
+      }
+      .contact-info {
+        font-size: 14px;
+        color: #666;
+        margin-top: 5px;
+      }
+      .print-button {
+        margin: 20px auto;
+        text-align: center;
+      }
+      .print-button button {
+        background-color: #0e2a47;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 15px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .print-button button:hover {
+        background-color: #143b6b;
+      }
+      @media print {
+        .site-card {
+          page-break-after: always;
+          break-after: page;
+        }
+        .site-card:last-of-type {
+          page-break-after: avoid;
+          break-after: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="print-button">
+      <button onclick="printSection()">🖨️ Download This Report as PDF</button>
+    </div>
+
+    <div class="container" id="print-area">
+      <!-- Header -->
+      <div class="header">
+        <img
+          src="https://i.imgur.com/BkeX66X.png"
+          alt="SGV Group Logo"
+          class="company-logo"
+        />
+        <h1>Security Inspection Report</h1>
+        <p>Report Date: <strong>{{ report_date }}</strong></p>
+      </div>
+
+      <p>Dear {{ client_name }},</p>
+      <p>
+        Please find below the comprehensive security inspection report for your
+        site(s), conducted on
+        <strong>{{ report_date }}</strong>. This report includes detailed
+        assessments across all key security parameters.
+      </p>
+
+      {% for site in sites %}
+      <div class="site-card">
+        <div class="site-header">
+          <strong>Site:</strong> {{ site.site_name }}
+        </div>
+        <div class="site-meta">
+          <div><strong>Date:</strong> {{ site.date }}</div>
+          <div><strong>Time:</strong> {{ site.time }}</div>
+          <div><strong>Shift:</strong> {{ site.shift }}</div>
+        </div>
+
+        <table>
+          <tr>
+            <th>Category</th>
+            <th>Rating</th>
+          </tr>
+          <tr>
+            <td>Grooming</td>
+            <td class="rating">{{ site.grooming }}</td>
+          </tr>
+          <tr>
+            <td>Alertness</td>
+            <td class="rating">{{ site.alertness }}</td>
+          </tr>
+          <tr>
+            <td>Post Discipline</td>
+            <td class="rating">{{ site.post_discipline }}</td>
+          </tr>
+          <tr>
+            <td>Site Safety</td>
+            <td class="rating">{{ site.site_safety }}</td>
+          </tr>
+          <tr>
+            <td>Documentation & Equipment</td>
+            <td class="rating">{{ site.documentation }}</td>
+          </tr>
+          <tr>
+            <td><strong>Overall Rating</strong></td>
+            <td class="rating"><strong>{{ site.overall_rating }}</strong></td>
+          </tr>
+        </table>
+
+        {% if site.suggestions %}
+        <div class="recommendations">
+          <h4>Remarks for {{ site.site_name }}:</h4>
+          <p>{{ site.suggestions }}</p>
+        </div>
+        {% endif %}
+
+        <p><strong>Inspected By:</strong> {{ inspected_by }}</p>
+
+        {% if site.images %}
+        <div class="image-gallery">
+          {% for image in site.images %}
+          <img src="{{ image.src }}" alt="{{ image.alt }}" />
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+
+      <div class="footer">
+        <p style="font-size: 14px; margin-bottom: 16px">
+          Should you have any questions regarding this report, please don't
+          hesitate to contact us.<br />
+          We value your feedback and are committed to continuously improving our
+          services.
+        </p>
+        <div class="footer-content">
+          <div class="footer-info">
+            <div class="signature">Control Room Team</div>
+            <div class="contact-info">
+              <p style="margin: 0"><strong>SGV Group</strong></p>
+              <p style="margin: 0">
+                Email:
+                <a
+                  href="mailto:cr@sgvgroup.in"
+                  style="color: #0e2d4f; text-decoration: none"
+                  >cr@sgvgroup.in</a
+                >
+                | Phone: (123) 456-7890
+              </p>
+            </div>
+            <p style="font-size: 12px; color: #777; margin-top: 12px">
+              © 2025 SGV Group. All Rights Reserved.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function printSection() {
+        const content = document.getElementById("print-area").innerHTML;
+        const printWindow = window.open("", "_blank", "width=900,height=1000");
+        printWindow.document.open();
+        printWindow.document.write(`
+          <html>
+            <head>
+              <title>Inspection Report</title>
+              <style>${document.querySelector("style").innerHTML}</style>
+            </head>
+            <body>
+              <div class="container">${content}</div>
+              <script>window.onload = () => { window.print(); }<\/script>
+            </body>
+          </html>
+        `);
+        printWindow.document.close();
+      }
+    </script>
+  </body>
+</html>
