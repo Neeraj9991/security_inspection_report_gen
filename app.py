@@ -63,7 +63,7 @@ def main():
                 )
                 site["images"] = []
                 if uploaded_images:
-                    for img in uploaded_images[:3]:
+                    for img in uploaded_images[:6]:
                         img_bytes = img.read()
                         encoded = base64.b64encode(img_bytes).decode("utf-8")
                         ext = img.type.split("/")[-1]
