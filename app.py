@@ -1,8 +1,7 @@
-import streamlit as st 
+import streamlit as st  
 from utils.email_processor import EmailProcessor
 import pandas as pd
 import base64
-import io
 
 def main():
     st.set_page_config(
@@ -76,16 +75,6 @@ def main():
             st.subheader("✉️ Email Preview")
             email_html = email_processor.generate_email_html(selected_client)
             st.components.v1.html(email_html, height=1000, scrolling=True)
-
-            # Outlook draft creation
-            st.sidebar.header("📧 Outlook Draft Actions")
-            if st.sidebar.button("📨 Create Outlook Draft"):
-                with st.spinner("Creating Outlook draft..."):
-                    try:
-                        email_processor.create_outlook_draft(selected_client)
-                        st.sidebar.success("✅ Outlook draft created!")
-                    except Exception as e:
-                        st.sidebar.error(f"❌ Error: {str(e)}")
 
             # Debugging
             if st.checkbox("🔍 Show raw client data"):

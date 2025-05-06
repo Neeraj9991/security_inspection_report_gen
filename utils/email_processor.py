@@ -1,8 +1,6 @@
-import pandas as pd
+import pandas as pd 
 from jinja2 import Environment, FileSystemLoader
 from datetime import datetime
-import win32com.client as win32
-import pythoncom
 
 class EmailProcessor:
     def __init__(self):
@@ -29,7 +27,6 @@ class EmailProcessor:
             lambda x: x.strftime('%B %d, %Y') if pd.notna(x) else 'Date not specified'
         )
         df['Formatted_Time'] = pd.to_datetime(df['Time'], errors='coerce').dt.strftime('%B %d, %Y at %I:%M %p')
-
 
         grouped = df.groupby('Client Email')
 
@@ -64,7 +61,7 @@ class EmailProcessor:
                     'overall_rating': row['Overall Rating'],
                     'observation': row['Observation'],
                     'inspected_by': row['Inspected By'],
-                    'images': []  # images uploaded separately
+                    'images': []  # to be populated later
                 }
                 sites.append(site_data)
 
@@ -97,37 +94,6 @@ class EmailProcessor:
             'sites_count': client_data['sites_count']
         }
         return self.template.render(**context)
-
-    def create_outlook_draft(self, client_data):
-        """Create Outlook draft"""
-        try:
-            pythoncom.CoInitialize()
-            outlook = win32.Dispatch('Outlook.Application')
-            mail = outlook.CreateItem(0)
-
-            html_body = self.generate_email_html(client_data)
-
-            site_names = [site['site_name'] for site in client_data['sites']]
-            subject_sites = (
-                ', '.join(site_names[:3]) + 
-                (f" and {len(site_names) - 3} more" if len(site_names) > 3 else '')
-            )
-
-            mail.Subject = f"Security Inspection Report: {subject_sites} | {client_data['report_date']}"
-            mail.To = client_data['client_email']
-
-            if client_data['cc_email']:
-                mail.CC = client_data['cc_email']
-
-            mail.HTMLBody = html_body
-            mail.Display(True)
-            return True
-
-        except Exception as e:
-            raise Exception(f"Email creation failed: {str(e)}")
-
-        finally:
-            pythoncom.CoUninitialize()
 
     def process_excel_file(self, file_path):
         """Main processing"""
