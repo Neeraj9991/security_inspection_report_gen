@@ -21,11 +21,11 @@ def main():
     </style>
     """, unsafe_allow_html=True)
 
-    st.title("📋 Site Inspection Email Generator")
+    st.title("Site Inspection Email Generator")
     st.markdown("**Upload an Excel file** with inspection data to generate professional email reports for clients.")
 
     # Sidebar upload section
-    st.sidebar.header("📤 Data Upload")
+    st.sidebar.header("Data Upload")
     with st.sidebar.expander("Download Template", expanded=False):
         st.download_button(
             label="⬇️ Download Excel Template",
@@ -53,7 +53,7 @@ def main():
             # Image uploader for each site
             st.subheader("🖼️ Upload Site Images")
             for site in selected_client["sites"]:
-                st.markdown(f"**{site['site_name']}** – {site['date']} | {site['shift']}")
+                st.markdown(f"**{site['site_name']}** - {site['date']} | {site['shift']}")
                 uploaded_images = st.file_uploader(
                     f"Upload up to 3 images for {site['site_name']}",
                     type=["png", "jpg", "jpeg"],
